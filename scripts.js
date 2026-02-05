@@ -8,17 +8,13 @@ const pageTitle = (title) => {
   return `<header><h1>${title}</h1></header>`;
 };
 
-const pageFooter = (footer) => {
-  return `<footer><h3>${footer}</h3></footer>`;
-};
-
 const navigation = () => {
   return `<nav>
     <a href="/">Home</a>
     <a href="/artists">Top Artists</a>
     <a href="/songs">Top Songs</a>
-   <a href="/house">House Music</a>
-   <a href="/electronic">Electronic Music</a>
+   <a href="/habits">Listening Habits</a>
+   <a href="/journey">My Music Journey in 2025</a>
   </nav>`;
 };
 
@@ -32,12 +28,23 @@ http
 
     if (currentPath === "/") {
       res.write(pageTitle("My Spotify Wrapped 2025"));
-      res.write("<h2>Welcome to the site!</h2>");
-      res.write("<p>Here you can see my Top artists and songs from 2025!</p>");
+      res.write("<h1>Welcome to the site!</h1>");
+      res.write(
+        "<p>Here you can read about my top artists and songs in 2025!</p>",
+      );
+      res.write(
+        "<p>You can also learn about my listening habits and my personal music journey!</p>",
+      );
+      res.write(
+        "<p>Down below you can read about my Top house artists and songs from 2025!</p>",
+      );
       res.write("Check these links!");
-      res.write("<a href='/artists?artists=house'>House Artists</a>");
-      res.write("<a href='/housesongs?housesongs=top5'>Top 5 House Songs</a>");
-      res.write("<a href='/housesongs?housesongs=top3'>Top 3 House Songs</a>");
+      res.write("<ul>");
+      res.write("<li><a href='/artists?artists=house'>House Artists</a></li>");
+      res.write(
+        "<li><a href='/housesongs?housesongs=top5'>Top 5 House Songs</a></li>",
+      );
+      res.write("</ul>");
       res.end();
     } else if (currentPath === "/artists") {
       const search = queries.artists;
@@ -71,7 +78,7 @@ http
         );
       });
       res.end();
-    } else if (currentPath === "/house") {
+    } else if (currentPath === "/habits") {
       fs.readFile("./content/page1.html", (err, data) => {
         if (err) {
           res.write("Could not load page!");
@@ -80,7 +87,7 @@ http
         }
         res.end();
       });
-    } else if (currentPath === "/electronic") {
+    } else if (currentPath === "/journey") {
       fs.readFile("./content/page2.html", (err, data) => {
         if (err) {
           res.write("Could not load page!");
@@ -94,24 +101,12 @@ http
 
       if (search === "top5") {
         res.write(pageTitle("House songs in my Top 5!"));
-        res.write("<h2>House songs that are in my Tçop 5 most most listened!");
+        res.write("<h2>House songs that are in my Top 5 most listened!</h2>");
 
         topSongs.forEach((song) => {
           if (song.genre === "house") {
             if (song.rank <= 5) {
               res.write(`<p>${song.rank} - ${song.songName}</p>`);
-            }
-          }
-        });
-        res.end();
-      } else if (search === "top3") {
-        res.write(pageTitle("Top 3 house songs!"));
-        res.write("<h2>My top 3 house songs!");
-
-        topSongs.forEach((song) => {
-          if (song.genre === "house") {
-            if (song.rank <= 3) {
-              res.write(`<p>${song.rank} - ${song.songName}`);
             }
           }
         });
@@ -122,7 +117,7 @@ http
 
         topSongs.forEach((song) => {
           if (song.genre === "house") {
-            res.write(`<p>${song.rank} - ${song.songName}`);
+            res.write(`<p>${song.rank} - ${song.songName}</p>`);
           }
         });
         res.end();
